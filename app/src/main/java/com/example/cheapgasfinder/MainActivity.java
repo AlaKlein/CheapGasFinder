@@ -17,11 +17,11 @@ import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText ed_username = null;
-    private EditText ed_password = null;
-    private Button bt_login = null;
-    private Button bt_register = null;
-    private TextView tv_error = null;
+    private EditText edUsername = null;
+    private EditText edPassword = null;
+    private Button btLogin = null;
+    private Button btRegister = null;
+    private TextView tvError = null;
     String login = "ala.klein";
     String password = "25d55ad283aa400af464c76d713c07ad";
 
@@ -47,29 +47,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       ed_username = (EditText) findViewById( R.id.et_login);
-       ed_password = (EditText) findViewById( R.id.et_password);
-       bt_login = (Button) findViewById ( R.id.bt_login);
-       bt_register = (Button) findViewById( R.id.bt_register);
-       tv_error = (TextView) findViewById( R.id.tv_error);
+       edUsername = (EditText) findViewById( R.id.et_login);
+       edPassword = (EditText) findViewById( R.id.et_password);
+       btLogin = (Button) findViewById ( R.id.bt_login);
+       btRegister = (Button) findViewById( R.id.bt_register);
+       tvError = (TextView) findViewById( R.id.tv_error);
 
-        bt_login.setOnClickListener(new View.OnClickListener() {
+        btLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ed_username.getText().toString().equals(login) && (getMd5Hash(ed_password.getText().toString()).equals(password))) {
-                    Intent intent = new Intent(MainActivity.this, com.example.cheapgasfinder.home.class);
+                if (edUsername.getText().toString().equals(login) && (getMd5Hash(edPassword.getText().toString()).equals(password))) {
+                    Intent intent = new Intent(MainActivity.this, Home.class);
                     intent.setAction(Intent.ACTION_VIEW);
                     startActivity(intent);
                 }else{
-                  tv_error.setText("Incorrect user or password!");
+                  tvError.setText("Incorrect user or password!");
                 }
             }
         });
 
-        bt_register.setOnClickListener(new View.OnClickListener() {
+        btRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, com.example.cheapgasfinder.sign_up.class);
+                Intent intent = new Intent(MainActivity.this, SignUp.class);
                 intent.setAction(Intent.ACTION_VIEW);
                 startActivity(intent);
             }
