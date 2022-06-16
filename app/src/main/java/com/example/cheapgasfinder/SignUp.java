@@ -21,7 +21,7 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        edSignUpUsername = findViewById( R.id.edSignUpUsername);
+        edSignUpUsername = findViewById( R.id.edSignUpEmail);
         edSignUpPassword = findViewById( R.id.edSignUpPassword);
         edSignUpPassword2 = findViewById( R.id.edSignUpPassword2);
         btSubmit = findViewById( R.id.btSubmit);
@@ -29,6 +29,7 @@ public class SignUp extends AppCompatActivity {
 
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View view) {
                 finish();
             }

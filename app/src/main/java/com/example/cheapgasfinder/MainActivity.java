@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btLogin = null;
     private Button btRegister = null;
     private TextView tvError = null;
-    String login = "ala.klein";
+    String login = "ala.klein@teste.com";
     String password = "25d55ad283aa400af464c76d713c07ad";
 
     public static String getMd5Hash(String input) {
@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         btRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                edUsername.setText("");
+                edPassword.setText("");
                 Intent intent = new Intent(MainActivity.this, SignUp.class);
                 intent.setAction(Intent.ACTION_VIEW);
                 startActivity(intent);
