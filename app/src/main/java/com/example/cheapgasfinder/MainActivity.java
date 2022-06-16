@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (edUsername.getText().toString().equals(login) && (getMd5Hash(edPassword.getText().toString()).equals(password))) {
-                    Intent intent = new Intent(MainActivity.this, Home.class);
+                    Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                     intent.setAction(Intent.ACTION_VIEW);
                     startActivity(intent);
                 }else{
