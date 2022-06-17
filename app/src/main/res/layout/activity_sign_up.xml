@@ -7,6 +7,21 @@
     tools:context=".SignUp">
 
     <TextView
+        android:id="@+id/tv_error2"
+        android:layout_width="206dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="102dp"
+        android:layout_marginTop="644dp"
+        android:layout_marginEnd="103dp"
+        android:layout_marginBottom="65dp"
+        android:textAlignment="center"
+        android:textColor="#CC1608"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/textView4"
         android:layout_width="86dp"
         android:layout_height="42dp"
@@ -126,15 +141,13 @@
         android:id="@+id/btCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="157dp"
-        android:layout_marginTop="548dp"
-        android:layout_marginEnd="161dp"
-        android:layout_marginBottom="135dp"
+        android:layout_marginStart="159dp"
+        android:layout_marginTop="553dp"
+        android:layout_marginEnd="159dp"
+        android:layout_marginBottom="130dp"
         android:text="Cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
