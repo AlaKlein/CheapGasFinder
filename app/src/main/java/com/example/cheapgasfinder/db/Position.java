@@ -1,24 +1,20 @@
 package com.example.cheapgasfinder.db;
 
+import android.graphics.Bitmap;
+
 import java.util.Date;
+import java.util.List;
 
 public class Position {
     private double latitude;
     private double longitude;
     private Date date;
     private String name;
-    private double price;
+    private double priceGas;
+    private double priceAlcool;
+    private double priceDiesel;
 
-    public Position() {
-    }
-
-    public Position(long latitude, long longitude, Date date, String name, double price) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.date = date;
-        this.name = name;
-        this.price = price;
-    }
+    private List<Bitmap> images;
 
     public double getLatitude() {
         return latitude;
@@ -52,11 +48,19 @@ public class Position {
         this.name = name;
     }
 
-    public double getPrice() {
-        return price;
+    public void setPriceGas(double priceGas) {
+        this.priceGas = priceGas;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setPriceAlcool(double priceAlcool) {
+        this.priceAlcool = priceAlcool;
+    }
+
+    public void setPriceDiesel(double priceDiesel) {
+        this.priceDiesel = priceDiesel;
+    }
+
+    public void setImages(List<Bitmap> images) {
+        this.images = images;
     }
 }

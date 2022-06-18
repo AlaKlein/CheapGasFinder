@@ -18,16 +18,8 @@ import java.util.List;
 
 public class ImageAdapter extends ArrayAdapter<Bitmap> {
 
-    private List<Bitmap> images = new ArrayList<Bitmap>();
-
     public ImageAdapter(@NonNull Context context, int resource, @NonNull List<Bitmap> objects) {
         super(context, resource, objects);
-
-        images = objects;
-    }
-
-    public void setImages(List<Bitmap> images) {
-        this.images = images;
     }
 
     @NonNull
@@ -47,12 +39,12 @@ public class ImageAdapter extends ArrayAdapter<Bitmap> {
             holder = (ImageHolder) convertView.getTag();
         }
 
-        holder.setImage( images.get( position ) );
+        holder.setImage( getItem( position ) );
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                remove( getItem( position )  );
             }
         });
         return convertView;

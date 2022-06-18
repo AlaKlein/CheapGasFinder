@@ -30,11 +30,13 @@ public class MapsActivity extends FragmentActivity {
 
     private Position p;
 
-    private PositionSheet s = new PositionSheet();
+    private PositionSheet s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        s = new PositionSheet();
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -68,7 +70,10 @@ public class MapsActivity extends FragmentActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                s.show( getSupportFragmentManager(), "ActionBottomDialog" );
+                if( p != null ) {
+                    s.setPosition(p);
+                    s.show(getSupportFragmentManager(), "ActionBottomDialog");
+                }
             }
         });
     }
