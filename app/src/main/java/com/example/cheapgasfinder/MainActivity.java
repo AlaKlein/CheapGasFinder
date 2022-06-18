@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                                Intent intent = new Intent(MainActivity.this, Home.class);
                                 intent.setAction(Intent.ACTION_VIEW);
                                 startActivity(intent);
                             }else {
@@ -105,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser currentuser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentuser == null) {
-
+            //Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            //intent.setAction(Intent.ACTION_VIEW);
+            //startActivity(intent);
         }
     }
 }
