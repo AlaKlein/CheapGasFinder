@@ -2,19 +2,16 @@ package com.example.cheapgasfinder.components;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -29,7 +26,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +42,15 @@ public class PositionSheet extends BottomSheetDialogFragment {
 
     private TextView nameField;
     private TextView priceGasField;
-    private TextView priceAlcoolField;
+    private TextView priceEthanolField;
     private TextView priceDieselField;
+
+    private void clearFields() {
+        nameField.setText("");
+        priceGasField.setText("");
+        priceEthanolField.setText("");
+        priceDieselField.setText("");
+    }
 
     private DatabaseReference db;
 
@@ -67,41 +70,49 @@ public class PositionSheet extends BottomSheetDialogFragment {
 
         db = FirebaseDatabase.getInstance().getReference();
 
-        imageList = view.findViewById( R.id.list);
-        imageButton = view.findViewById( R.id.imageButton);
-        addButton = view.findViewById( R.id.okButton );
-        cancelButton = view.findViewById( R.id.cancelButton );
+        imageList = view.findViewById(R.id.list);
+        imageButton = view.findViewById(R.id.imageButton);
+        addButton = view.findViewById(R.id.okButton);
+        cancelButton = view.findViewById(R.id.cancelButton);
 
-        nameField = view.findViewById( R.id.nameField );
-        priceGasField = view.findViewById( R.id.priceGasField );
-        priceAlcoolField = view.findViewById( R.id.priceAlcoolField );
-        priceDieselField = view.findViewById( R.id.priceDieselField );
+        nameField = view.findViewById(R.id.nameField);
+        priceGasField = view.findViewById(R.id.priceGasField);
+        priceEthanolField = view.findViewById(R.id.priceAlcoolField);
+        priceDieselField = view.findViewById(R.id.priceDieselField);
 
-        imageAdapter = new ImageAdapter( getContext(), R.layout.image_item, new ArrayList<Bitmap>() );
+        imageAdapter = new ImageAdapter(getContext(), R.layout.image_item, new ArrayList<Bitmap>());
 
-        imageList.setAdapter( imageAdapter );
+        imageList.setAdapter(imageAdapter);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.child( FirebaseAuth.getInstance().getCurrentUser().getUid() ).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                db.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         Object result = task.getResult().getValue();
                         List<Position> items = new ArrayList<>();
+                        if (TextUtils.isEmpty(nameField.getText().toString())) {
+                            nameField.setError("Field can't be empty!");
+                        } else if (TextUtils.isEmpty(priceGasField.getText().toString())) {
+                            priceGasField.setError("Field can't be empty!");
+                        } else if (TextUtils.isEmpty(priceEthanolField.getText().toString())) {
+                            priceEthanolField.setError("Field can't be empty!");
+                        } else if (TextUtils.isEmpty(priceDieselField.getText().toString())) {
+                            priceDieselField.setError("Field can't be empty!");
+                        } else {
+                            if (result != null && result instanceof List) {
+                                items = (List<Position>) result;
+                            }
 
-                        if( result != null && result instanceof List )
-                        {
-                            items = (List<Position>) result;
+                            position.setName(nameField.getText().toString());
+
+                            items.add(position);
+
+                            db.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(items);
+                            clearFields();
+                            dismiss();
                         }
-
-                        position.setName( nameField.getText().toString() );
-
-                        items.add( position );
-
-                        db.child( FirebaseAuth.getInstance().getCurrentUser().getUid() ).setValue( items );
-
-                        dismiss();
                     }
                 });
             }
@@ -110,6 +121,7 @@ public class PositionSheet extends BottomSheetDialogFragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearFields();
                 dismiss();
             }
         });
@@ -131,7 +143,7 @@ public class PositionSheet extends BottomSheetDialogFragment {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
 
-            imageAdapter.insert( imageBitmap, 0 );
+            imageAdapter.insert(imageBitmap, 0);
         }
     }
 }
