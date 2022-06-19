@@ -3,9 +3,12 @@ package com.example.cheapgasfinder;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.cheapgasfinder.components.PositionSheet;
 import com.example.cheapgasfinder.db.Position;
@@ -16,15 +19,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.cheapgasfinder.databinding.ActivityMapsBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MapsActivity extends FragmentActivity {
 
     private ActivityMapsBinding binding;
-
+    private FirebaseAuth mAuth;
     private FloatingActionButton addButton;
     private FloatingActionButton searchButton;
+    private FloatingActionButton logoutButton;
+
 
     private DatabaseReference db;
 
@@ -38,6 +44,7 @@ public class MapsActivity extends FragmentActivity {
 
         s = new PositionSheet();
 
+        mAuth = FirebaseAuth.getInstance();
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -46,6 +53,8 @@ public class MapsActivity extends FragmentActivity {
 
         addButton = findViewById( R.id.addButton );
         searchButton = findViewById( R.id.searchButton );
+        logoutButton = findViewById( R.id.logoutButton );
+
 
         db = FirebaseDatabase.getInstance().getReference();
 
@@ -73,7 +82,20 @@ public class MapsActivity extends FragmentActivity {
                 if( p != null ) {
                     s.setPosition(p);
                     s.show(getSupportFragmentManager(), "ActionBottomDialog");
+                }else{
+                    Toast.makeText(MapsActivity.this, "Select a place on the map first!", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth.signOut();
+                Intent intent = new Intent(MapsActivity.this, MainActivity.class);
+                intent.setAction(Intent.ACTION_VIEW);
+                startActivity(intent);
+                finish();
             }
         });
     }

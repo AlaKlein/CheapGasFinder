@@ -12,6 +12,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
         android:ems="10"
+        android:hint="Gas Station Name"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,6 +24,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="104dp"
         android:ems="10"
+        android:hint="Gas Price"
         android:inputType="number|numberDecimal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="188dp"
         android:layout_marginTop="608dp"
-        android:text="Salvar"
+        android:text="Submit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="280dp"
         android:layout_marginTop="608dp"
-        android:text="Cancelar"
+        android:text="Cancel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,37 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="608dp"
-        android:text="Imagem"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Nome"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="86dp"
-        android:text="Preço da Gasolina"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="152dp"
-        android:text="Preço do Alcool"
+        android:text="Photo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -102,17 +74,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="171dp"
         android:ems="10"
+        android:hint="Ethanol Price"
         android:inputType="number|numberDecimal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="222dp"
-        android:text="Preço do Disel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -124,6 +87,7 @@
         android:layout_marginTop="244dp"
         android:ems="10"
         android:inputType="numberDecimal"
+        android:hint="Diesel Price"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
