@@ -32,7 +32,6 @@ public class Home extends AppCompatActivity {
                 Intent intent = new Intent(Home.this, GasStationRegistration.class);
                 intent.setAction(Intent.ACTION_VIEW);
                 startActivity(intent);
-                finish();
             }
         });
 

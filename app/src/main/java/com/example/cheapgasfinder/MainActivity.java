@@ -1,16 +1,22 @@
 package com.example.cheapgasfinder;
 
+import static android.app.ProgressDialog.show;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText edPassword = null;
     private Button btLogin = null;
     private Button btRegister = null;
-    private TextView tvError = null;
+    private CheckBox cbPassword = null;
+    private ProgressBar signInProgressBar = null;
     //String login = "ala.klein@teste.com";
     //String password = "25d55ad283aa400af464c76d713c07ad";
 
@@ -58,29 +65,35 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       mAuth = FirebaseAuth.getInstance();
-       edUsername = (EditText) findViewById( R.id.et_login);
-       edPassword = (EditText) findViewById( R.id.et_password);
-       btLogin = (Button) findViewById ( R.id.bt_login);
-       btRegister = (Button) findViewById( R.id.bt_register);
-       tvError = (TextView) findViewById( R.id.tv_error);
+        mAuth = FirebaseAuth.getInstance();
+        edUsername = (EditText) findViewById(R.id.etEmail);
+        edPassword = (EditText) findViewById(R.id.etPassword);
+        btLogin = (Button) findViewById(R.id.btSignIn);
+        btRegister = (Button) findViewById(R.id.btSignUp);
+        cbPassword = (CheckBox) findViewById(R.id.cbPassword2);
+        signInProgressBar = (ProgressBar) findViewById(R.id.signUnProgressBar);
 
         btLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //if (edUsername.getText().toString().equals(login) && (getMd5Hash(edPassword.getText().toString()).equals(password))) {
-                String email = edUsername.getText().toString();
-                String password = edPassword.getText().toString();
-                if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)) {
-                    mAuth.signInWithEmailAndPassword(email,getMd5Hash(password)).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                if (TextUtils.isEmpty(edUsername.getText().toString())) {
+                    edUsername.setError("Field can't be empty!");
+                } else if (TextUtils.isEmpty(edPassword.getText().toString())) {
+                    edPassword.setError("Field can't be empty!");
+                } else {
+                    signInProgressBar.setVisibility(View.VISIBLE);
+                    mAuth.signInWithEmailAndPassword(edUsername.getText().toString(), getMd5Hash(edPassword.getText().toString())).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Intent intent = new Intent(MainActivity.this, Home.class);
+                                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                                 intent.setAction(Intent.ACTION_VIEW);
                                 startActivity(intent);
-                            }else {
-                                tvError.setText("Incorrect user or password!");
+                                signInProgressBar.setVisibility(View.INVISIBLE);
+                            } else {
+                                String error = task.getException().getMessage();
+                                Toast.makeText(MainActivity.this, "" + error, Toast.LENGTH_SHORT).show();
+                                signInProgressBar.setVisibility(View.INVISIBLE);
                             }
                         }
                     });
@@ -96,6 +109,17 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, SignUp.class);
                 intent.setAction(Intent.ACTION_VIEW);
                 startActivity(intent);
+            }
+        });
+
+        cbPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cbPassword.isChecked()) {
+                    edPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    edPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
             }
         });
     }
