@@ -1,5 +1,6 @@
 package com.example.cheapgasfinder;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -30,8 +31,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,14 +60,36 @@ public class MapsActivity extends FragmentActivity {
 
     private Marker temp;
 
-    public void refreshContent() {
-        db.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
+        binding = ActivityMapsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+
+        addButton = findViewById(R.id.addButton);
+        searchButton = findViewById(R.id.searchButton);
+        logoutButton = findViewById(R.id.logoutButton);
+
+        db = FirebaseDatabase.getInstance().getReference();
+
+        filter = new HashMap<>();
+        markers = new HashMap<>();
+
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        db.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 googleMap.clear();
                 markers.clear();
 
-                Object result = task.getResult().getValue();
+                Object result = snapshot.getValue();
 
                 if( result != null ) {
                     Map<String, List> map = (HashMap) result;
@@ -126,39 +151,19 @@ public class MapsActivity extends FragmentActivity {
                     }
                 }
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mAuth = FirebaseAuth.getInstance();
-        binding = ActivityMapsBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-
-        addButton = findViewById(R.id.addButton);
-        searchButton = findViewById(R.id.searchButton);
-        logoutButton = findViewById(R.id.logoutButton);
-
-        db = FirebaseDatabase.getInstance().getReference();
-
-        filter = new HashMap<>();
-        markers = new HashMap<>();
-
-        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull GoogleMap googleMap) {
                 MapsActivity.this.googleMap = googleMap;
 
-                refreshContent();
-
-                Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+                @SuppressLint("MissingPermission") Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
 
                 locationResult.addOnCompleteListener( MapsActivity.this, new OnCompleteListener<Location>() {
                 @Override
@@ -195,24 +200,23 @@ public class MapsActivity extends FragmentActivity {
                     public boolean onMarkerClick(@NonNull Marker marker) {
                         Position position = markers.get( marker );
 
-                        PositionDialog s = new PositionDialog();
+                        if( position != null ) {
 
-                        s.setPosition(position);
-                        s.setMode( position.isEditable() ? 1 : 2 );
-                        s.setCallback(new Callback<Object>() {
-                            @Override
-                            public void doAccept(Object o) {
-                                if( temp != null )
-                                {
-                                    temp.remove();
-                                    temp = null;
+                            PositionDialog s = new PositionDialog();
+
+                            s.setPosition(position);
+                            s.setMode(position.isEditable() ? 1 : 2);
+                            s.setCallback(new Callback<Object>() {
+                                @Override
+                                public void doAccept(Object o) {
+                                    if (temp != null) {
+                                        temp.remove();
+                                        temp = null;
+                                    }
                                 }
-
-                                refreshContent();
-                            }
-                        });
-                        s.show(getSupportFragmentManager(), "PossitonDialog");
-
+                            });
+                            s.show(getSupportFragmentManager(), "PossitonDialog");
+                        }
                         return false;
                     }
                 });
@@ -234,8 +238,6 @@ public class MapsActivity extends FragmentActivity {
                                 temp.remove();
                                 temp = null;
                             }
-
-                            refreshContent();
                         }
                     });
                     s.show(getSupportFragmentManager(), "PossitonDialog");
@@ -265,8 +267,6 @@ public class MapsActivity extends FragmentActivity {
                     @Override
                     public void doAccept(Map<String, String> o) {
                         filter = o;
-
-                        refreshContent();
                     }
                 });
 

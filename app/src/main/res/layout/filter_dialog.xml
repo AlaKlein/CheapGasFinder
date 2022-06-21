@@ -5,28 +5,6 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/maxDateField"
-        android:layout_width="378dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="192dp"
-        android:ems="10"
-        android:hint="Max Date"
-        android:inputType="date"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/minDateField"
-        android:layout_width="378dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="236dp"
-        android:ems="10"
-        android:hint="MinDate"
-        android:inputType="date"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
         android:id="@+id/nameFilterField"
         android:layout_width="378dp"
         android:layout_height="46dp"

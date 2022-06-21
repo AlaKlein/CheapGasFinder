@@ -28,8 +28,8 @@ public class FilterDialog extends DialogFragment {
     private TextView priceGasField;
     private TextView priceEthanolField;
     private TextView priceDieselField;
-    private TextView maxDateField;
-    private TextView minDateField;
+//    private TextView maxDateField;
+//    private TextView minDateField;
 
     private Callback<Map<String, String>> callback;
 
@@ -38,8 +38,8 @@ public class FilterDialog extends DialogFragment {
         priceGasField.setText("");
         priceEthanolField.setText("");
         priceDieselField.setText("");
-        maxDateField.setText("");
-        minDateField.setText("");
+//        maxDateField.setText("");
+//        minDateField.setText("");
     }
 
     private DatabaseReference db;
@@ -67,8 +67,8 @@ public class FilterDialog extends DialogFragment {
         priceGasField = view.findViewById(R.id.maxPriceGasField);
         priceEthanolField = view.findViewById(R.id.maxPriceAlcoolField);
         priceDieselField = view.findViewById(R.id.maxPriceDieselField);
-        maxDateField = view.findViewById(R.id.maxDateField);
-        minDateField = view.findViewById(R.id.minDateField);
+//        maxDateField = view.findViewById(R.id.maxDateField);
+//        minDateField = view.findViewById(R.id.minDateField);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,8 +79,8 @@ public class FilterDialog extends DialogFragment {
                 vals.put("gas", priceGasField.getText().toString());
                 vals.put("alcool", priceEthanolField.getText().toString());
                 vals.put("diesel", priceDieselField.getText().toString());
-                vals.put("maxDate", maxDateField.getText().toString());
-                vals.put("minDate", minDateField.getText().toString());
+//                vals.put("maxDate", maxDateField.getText().toString());
+//                vals.put("minDate", minDateField.getText().toString());
                 callback.doAccept(vals);
 
                 clearFields();
