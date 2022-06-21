@@ -60,6 +60,72 @@ public class MapsActivity extends FragmentActivity {
 
     private Marker temp;
 
+    public void refreshContent(Object result)
+    {
+        googleMap.clear();
+        markers.clear();
+
+        if( result != null ) {
+            Map<String, List> map = (HashMap) result;
+
+            String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            for (Map.Entry<String, List> e : map.entrySet()) {
+                boolean editable = e.getKey().equals(user);
+
+                List<Object> l = e.getValue();
+
+                for ( int i = 0; i < l.size(); i++ ) {
+                    Map<String, Object> m = (HashMap) l.get( i );
+
+                    Position p = new Position(m);
+
+                    p.setI( i );
+                    p.setEditable( editable );
+                    p.setUser( e.getKey() );
+                    if (filter.containsKey("name") && !filter.get("name").isEmpty() && !p.getName().contains(filter.get("name"))) {
+                        continue;
+                    }
+
+                    if( filter.containsKey("gas") && !filter.get( "gas" ).isEmpty() )
+                    {
+                        double max = Double.parseDouble( filter.get("gas") );
+
+                        if( p.getPriceGas() > max )
+                        {
+                            continue;
+                        }
+                    }
+
+                    if( filter.containsKey("alcool") && !filter.get( "alcool" ).isEmpty() )
+                    {
+                        double max = Double.parseDouble( filter.get("alcool") );
+
+                        if( p.getPriceAlcool() > max )
+                        {
+                            continue;
+                        }
+                    }
+
+                    if( filter.containsKey("diesel") && !filter.get( "diesel" ).isEmpty() )
+                    {
+                        double max = Double.parseDouble( filter.get("diesel") );
+
+                        if( p.getPriceDiesel() > max )
+                        {
+                            continue;
+                        }
+                    }
+
+                    Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(p.getLatitude(), p.getLongitude()))
+                            .icon(BitmapDescriptorFactory.defaultMarker(editable ? BitmapDescriptorFactory.HUE_BLUE : BitmapDescriptorFactory.HUE_RED)));
+
+                    markers.put( marker, p );
+                }
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,70 +152,9 @@ public class MapsActivity extends FragmentActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                googleMap.clear();
-                markers.clear();
-
                 Object result = snapshot.getValue();
 
-                if( result != null ) {
-                    Map<String, List> map = (HashMap) result;
-
-                    String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                    for (Map.Entry<String, List> e : map.entrySet()) {
-                        boolean editable = e.getKey().equals(user);
-
-                        List<Object> l = e.getValue();
-
-                        for ( int i = 0; i < l.size(); i++ ) {
-                            Map<String, Object> m = (HashMap) l.get( i );
-
-                            Position p = new Position(m);
-
-                            p.setI( i );
-                            p.setEditable( editable );
-                            p.setUser( e.getKey() );
-                            if (filter.containsKey("name") && !filter.get("name").isEmpty() && !p.getName().contains(filter.get("name"))) {
-                                continue;
-                            }
-
-                            if( filter.containsKey("gas") && !filter.get( "gas" ).isEmpty() )
-                            {
-                                double max = Double.parseDouble( filter.get("gas") );
-
-                                if( p.getPriceGas() > max )
-                                {
-                                    continue;
-                                }
-                            }
-
-                            if( filter.containsKey("alcool") && !filter.get( "alcool" ).isEmpty() )
-                            {
-                                double max = Double.parseDouble( filter.get("alcool") );
-
-                                if( p.getPriceAlcool() > max )
-                                {
-                                    continue;
-                                }
-                            }
-
-                            if( filter.containsKey("diesel") && !filter.get( "diesel" ).isEmpty() )
-                            {
-                                double max = Double.parseDouble( filter.get("diesel") );
-
-                                if( p.getPriceDiesel() > max )
-                                {
-                                    continue;
-                                }
-                            }
-
-                            Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(p.getLatitude(), p.getLongitude()))
-                                    .icon(BitmapDescriptorFactory.defaultMarker(editable ? BitmapDescriptorFactory.HUE_BLUE : BitmapDescriptorFactory.HUE_RED)));
-
-                            markers.put( marker, p );
-                        }
-                    }
-                }
+                refreshContent( result );
             }
 
             @Override
@@ -267,6 +272,13 @@ public class MapsActivity extends FragmentActivity {
                     @Override
                     public void doAccept(Map<String, String> o) {
                         filter = o;
+
+                        db.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                refreshContent( task.getResult().getValue() );
+                            }
+                        });
                     }
                 });
 
