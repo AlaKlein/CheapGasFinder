@@ -8,7 +8,7 @@ import java.util.List;
 public class Position {
     private double latitude;
     private double longitude;
-    private Date date;
+    private long timestamp;
     private String name;
     private double priceGas;
     private double priceAlcool;
@@ -32,12 +32,12 @@ public class Position {
         this.longitude = longitude;
     }
 
-    public Date getDate() {
-        return date;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getName() {
@@ -48,16 +48,32 @@ public class Position {
         this.name = name;
     }
 
+    public double getPriceGas() {
+        return priceGas;
+    }
+
     public void setPriceGas(double priceGas) {
         this.priceGas = priceGas;
+    }
+
+    public double getPriceAlcool() {
+        return priceAlcool;
     }
 
     public void setPriceAlcool(double priceAlcool) {
         this.priceAlcool = priceAlcool;
     }
 
+    public double getPriceDiesel() {
+        return priceDiesel;
+    }
+
     public void setPriceDiesel(double priceDiesel) {
         this.priceDiesel = priceDiesel;
+    }
+
+    public List<Bitmap> getImages() {
+        return images;
     }
 
     public void setImages(List<Bitmap> images) {

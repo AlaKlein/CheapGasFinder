@@ -14,13 +14,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 import com.example.cheapgasfinder.R;
 import com.example.cheapgasfinder.adapter.ImageAdapter;
 import com.example.cheapgasfinder.db.Position;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PositionSheet extends BottomSheetDialogFragment {
+public class PositionDialog extends DialogFragment {
 
     private Position position;
 
@@ -61,7 +61,7 @@ public class PositionSheet extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.possition_sheet, container, false);
+        return inflater.inflate(R.layout.possition_dialog, container, false);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class PositionSheet extends BottomSheetDialogFragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                db.child("positions").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         Object result = task.getResult().getValue();
@@ -109,7 +109,7 @@ public class PositionSheet extends BottomSheetDialogFragment {
 
                             items.add(position);
 
-                            db.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(items);
+                            db.child("positions").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(items);
                             clearFields();
                             dismiss();
                         }

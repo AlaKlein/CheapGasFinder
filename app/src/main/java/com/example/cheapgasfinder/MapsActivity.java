@@ -3,14 +3,12 @@ package com.example.cheapgasfinder;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.cheapgasfinder.components.PositionSheet;
+import com.example.cheapgasfinder.components.PositionDialog;
 import com.example.cheapgasfinder.db.Position;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -18,10 +16,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.cheapgasfinder.databinding.ActivityMapsBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MapsActivity extends FragmentActivity {
 
@@ -36,13 +41,13 @@ public class MapsActivity extends FragmentActivity {
 
     private Position p;
 
-    private PositionSheet s;
+    private PositionDialog s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        s = new PositionSheet();
+        s = new PositionDialog();
 
         mAuth = FirebaseAuth.getInstance();
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
@@ -55,8 +60,20 @@ public class MapsActivity extends FragmentActivity {
         searchButton = findViewById( R.id.searchButton );
         logoutButton = findViewById( R.id.logoutButton );
 
-
         db = FirebaseDatabase.getInstance().getReference();
+
+        db.child("positions").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                Object result = task.getResult().getValue();
+
+                Map<String, List> map = (HashMap) result;
+
+                for ( Map.Entry<String, List> e: map.entrySet()) {
+
+                }
+            }
+        });
 
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -96,6 +113,13 @@ public class MapsActivity extends FragmentActivity {
                 intent.setAction(Intent.ACTION_VIEW);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }
