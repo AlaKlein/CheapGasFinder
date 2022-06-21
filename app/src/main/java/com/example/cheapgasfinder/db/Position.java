@@ -2,8 +2,8 @@ package com.example.cheapgasfinder.db;
 
 import android.graphics.Bitmap;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class Position {
     private double latitude;
@@ -15,6 +15,21 @@ public class Position {
     private double priceDiesel;
 
     private List<Bitmap> images;
+
+    private boolean editable;
+
+    public Position() {
+    }
+
+    public Position(Map<String, Object> map) {
+        this.name = String.valueOf( map.get( "name" ) );
+        this.longitude = Double.parseDouble( map.get("longitude").toString() );
+        this.latitude = Double.parseDouble( map.get("latitude").toString() );
+        this.timestamp = Long.parseLong( map.get("timestamp").toString() );
+        this.priceGas = Double.parseDouble( map.get("priceGas").toString() );
+        this.priceAlcool = Double.parseDouble( map.get("priceAlcool").toString() );
+        this.priceDiesel = Double.parseDouble( map.get( "priceDiesel" ).toString() );
+    }
 
     public double getLatitude() {
         return latitude;
@@ -76,7 +91,17 @@ public class Position {
         return images;
     }
 
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
     public void setImages(List<Bitmap> images) {
         this.images = images;
     }
+
+
 }

@@ -45,6 +45,8 @@ public class PositionDialog extends DialogFragment {
     private TextView priceEthanolField;
     private TextView priceDieselField;
 
+    private int mode = 0;
+
     private void clearFields() {
         nameField.setText("");
         priceGasField.setText("");
@@ -56,6 +58,10 @@ public class PositionDialog extends DialogFragment {
 
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
     @Nullable
@@ -84,10 +90,26 @@ public class PositionDialog extends DialogFragment {
 
         imageList.setAdapter(imageAdapter);
 
+        if( mode > 0 )
+        {
+            nameField.setText(position.getName() );
+            priceGasField.setText( String.valueOf( position.getPriceGas() ));
+            priceEthanolField.setText( String.valueOf( position.getPriceAlcool() ) );
+            priceDieselField.setText( String.valueOf( position.getPriceDiesel() ) );
+        }
+
+        if( mode > 1 )
+        {
+            nameField.setEnabled( false );
+            priceGasField.setEnabled( false );
+            priceEthanolField.setEnabled( false );
+            priceDieselField.setEnabled( false );
+        }
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.child("positions").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                db.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         Object result = task.getResult().getValue();
@@ -106,10 +128,14 @@ public class PositionDialog extends DialogFragment {
                             }
 
                             position.setName(nameField.getText().toString());
+                            position.setPriceGas( Double.parseDouble( priceGasField.getText().toString() ) );
+                            position.setPriceAlcool( Double.parseDouble( priceEthanolField.getText().toString() ) );
+                            position.setPriceDiesel( Double.parseDouble( priceDieselField.getText().toString() ) );
+                            position.setTimestamp( System.currentTimeMillis() );
 
                             items.add(position);
 
-                            db.child("positions").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(items);
+                            db.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(items);
                             clearFields();
                             dismiss();
                         }

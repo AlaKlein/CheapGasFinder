@@ -16,6 +16,9 @@ import com.example.cheapgasfinder.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class FilterDialog extends DialogFragment {
 
     private Button addButton;
@@ -28,16 +31,22 @@ public class FilterDialog extends DialogFragment {
     private TextView maxDateField;
     private TextView minDateField;
 
-    private Callback<Object> callback;
+    private Callback<Map<String, String>> callback;
 
     private void clearFields() {
         nameField.setText("");
         priceGasField.setText("");
         priceEthanolField.setText("");
         priceDieselField.setText("");
+        maxDateField.setText("");
+        minDateField.setText("");
     }
 
     private DatabaseReference db;
+
+    public void setCallback(Callback<Map<String, String>> callback) {
+        this.callback = callback;
+    }
 
     @Nullable
     @Override
@@ -54,17 +63,28 @@ public class FilterDialog extends DialogFragment {
         addButton = view.findViewById(R.id.okButton);
         cancelButton = view.findViewById(R.id.cancelButton);
 
-        nameField = view.findViewById(R.id.nameField);
-        priceGasField = view.findViewById(R.id.priceGasField);
-        priceEthanolField = view.findViewById(R.id.priceAlcoolField);
-        priceDieselField = view.findViewById(R.id.priceDieselField);
-
-
+        nameField = view.findViewById(R.id.nameFilterField);
+        priceGasField = view.findViewById(R.id.maxPriceGasField);
+        priceEthanolField = view.findViewById(R.id.maxPriceAlcoolField);
+        priceDieselField = view.findViewById(R.id.maxPriceDieselField);
+        maxDateField = view.findViewById(R.id.maxDateField);
+        minDateField = view.findViewById(R.id.minDateField);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Map<String, String> vals = new HashMap<>();
 
+                vals.put("name", nameField.getText().toString());
+                vals.put("gas", priceGasField.getText().toString());
+                vals.put("alcool", priceEthanolField.getText().toString());
+                vals.put("diesel", priceDieselField.getText().toString());
+                vals.put("maxDate", maxDateField.getText().toString());
+                vals.put("minDate", minDateField.getText().toString());
+                callback.doAccept(vals);
+
+                clearFields();
+                dismiss();
             }
         });
 

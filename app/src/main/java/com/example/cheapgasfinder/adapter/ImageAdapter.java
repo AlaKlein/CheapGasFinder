@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import com.example.cheapgasfinder.R;
 import com.example.cheapgasfinder.components.ImageHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdapter extends ArrayAdapter<Bitmap> {
@@ -34,24 +33,23 @@ public class ImageAdapter extends ArrayAdapter<Bitmap> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         ImageHolder holder = null;
 
-        if(convertView == null){
+        if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.image_item, parent, false);
 
             holder = new ImageHolder(convertView);
 
             convertView.setTag(holder);
-        }
-        else{
+        } else {
             holder = (ImageHolder) convertView.getTag();
         }
 
-        holder.setImage( getItem( position ) );
+        holder.setImage(getItem(position));
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                remove( getItem( position )  );
+                remove(getItem(position));
             }
         });
         return convertView;

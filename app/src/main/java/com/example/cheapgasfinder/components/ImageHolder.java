@@ -9,12 +9,11 @@ import com.example.cheapgasfinder.R;
 public class ImageHolder {
     private ImageView imageView;
 
-    public ImageHolder(View v ) {
-        imageView = v.findViewById(R.id.imageView );
+    public ImageHolder(View v) {
+        imageView = v.findViewById(R.id.imageView);
     }
 
-    public void setImage( Bitmap i )
-    {
-        imageView.setImageBitmap( i );
+    public void setImage(Bitmap i) {
+        imageView.setImageBitmap(i);
     }
 }

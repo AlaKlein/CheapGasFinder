@@ -1,8 +1,5 @@
 package com.example.cheapgasfinder;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
@@ -13,6 +10,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -62,7 +62,7 @@ public class SignUp extends AppCompatActivity {
                     edSignUpPassword2.setError("Field can't be empty!");
                 } else if (!password.equals(password2)) {
                     Toast.makeText(SignUp.this, "Passwords must match!", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     signUpProgressBar.setVisibility(View.VISIBLE);
                     mAuth.createUserWithEmailAndPassword(email, MainActivity.getMd5Hash(password)).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -70,7 +70,7 @@ public class SignUp extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 finish();
                                 signUpProgressBar.setVisibility(View.INVISIBLE);
-                            }else{
+                            } else {
                                 String error = task.getException().getMessage();
                                 Toast.makeText(SignUp.this, "" + error, Toast.LENGTH_SHORT).show();
                                 signUpProgressBar.setVisibility(View.INVISIBLE);
