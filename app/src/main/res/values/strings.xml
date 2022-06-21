@@ -10,4 +10,24 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="welcome">Welcome To CheapGasFinder!</string>
+    <string name="emal">E-mail</string>
+    <string name="pass">Password</string>
+    <string name="singin">Sign In</string>
+    <string name="singup">Sign Up</string>
+    <string name="showpass">Show Password</string>
+    <string name="singupuser">Sign Up User</string>
+    <string name="confirmpass">Confirm Password</string>
+    <string name="cancel">Cancel</string>
+    <string name="name">Name</string>
+    <string name="maxgas">Max Gas Price</string>
+    <string name="maxethanol">Max Ethanol Price</string>
+    <string name="maxdiesel">Max Diesel Price</string>
+    <string name="submit">Submit</string>
+    <string name="stationname" >Gas Station Name</string>
+    <string name="gasprice">Gas Price</string>
+    <string name="ethanolprice">Ethanol Price</string>
+    <string name="dieselprice">Diesel Price</string>
+    <string name="photo">Photo</string>
+    <string name="delete">Delete</string>
 </resources>
