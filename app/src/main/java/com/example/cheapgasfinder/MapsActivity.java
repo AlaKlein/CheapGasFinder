@@ -71,11 +71,14 @@ public class MapsActivity extends FragmentActivity {
                     for (Map.Entry<String, List> e : map.entrySet()) {
                         boolean editable = e.getKey().equals(user);
 
-                        for (Object o : e.getValue()) {
-                            Map<String, Object> m = (HashMap) o;
+                        List<Object> l = e.getValue();
+
+                        for ( int i = 0; i < l.size(); i++ ) {
+                            Map<String, Object> m = (HashMap) l.get( i );
 
                             Position p = new Position(m);
 
+                            p.setI( i );
                             p.setEditable( editable );
 
                             if (filter.containsKey("name") && !filter.get("name").isEmpty() && !p.getName().contains(filter.get("name"))) {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Position {
+    private int i;
     private double latitude;
     private double longitude;
     private long timestamp;
@@ -14,7 +15,7 @@ public class Position {
     private double priceAlcool;
     private double priceDiesel;
 
-    private List<Bitmap> images;
+    private int images;
 
     private boolean editable;
 
@@ -29,6 +30,7 @@ public class Position {
         this.priceGas = Double.parseDouble( map.get("priceGas").toString() );
         this.priceAlcool = Double.parseDouble( map.get("priceAlcool").toString() );
         this.priceDiesel = Double.parseDouble( map.get( "priceDiesel" ).toString() );
+        this.images = Integer.parseInt( map.get( "images" ).toString() );
     }
 
     public double getLatitude() {
@@ -87,7 +89,7 @@ public class Position {
         this.priceDiesel = priceDiesel;
     }
 
-    public List<Bitmap> getImages() {
+    public int getImages() {
         return images;
     }
 
@@ -95,13 +97,19 @@ public class Position {
         return editable;
     }
 
+    public int getI() {
+        return i;
+    }
+
+    public void setI(int i) {
+        this.i = i;
+    }
+
     public void setEditable(boolean editable) {
         this.editable = editable;
     }
 
-    public void setImages(List<Bitmap> images) {
+    public void setImages(int images) {
         this.images = images;
     }
-
-
 }

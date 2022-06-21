@@ -17,15 +17,8 @@ import java.util.List;
 
 public class ImageAdapter extends ArrayAdapter<Bitmap> {
 
-    private List<Bitmap> images;
-
     public ImageAdapter(@NonNull Context context, int resource, @NonNull List<Bitmap> objects) {
         super(context, resource, objects);
-        images = objects;
-    }
-
-    public List<Bitmap> getImages() {
-        return images;
     }
 
     @NonNull
