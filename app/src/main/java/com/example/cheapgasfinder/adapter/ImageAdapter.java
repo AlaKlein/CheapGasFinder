@@ -17,6 +17,12 @@ import java.util.List;
 
 public class ImageAdapter extends ArrayAdapter<Bitmap> {
 
+    private int mode = 0;
+
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
     public ImageAdapter(@NonNull Context context, int resource, @NonNull List<Bitmap> objects) {
         super(context, resource, objects);
     }
@@ -42,9 +48,12 @@ public class ImageAdapter extends ArrayAdapter<Bitmap> {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                remove(getItem(position));
-            }
-        });
+
+                    if( mode == 0 ) {
+                        remove(getItem(position));
+                    }
+                }
+            });
         return convertView;
     }
 }

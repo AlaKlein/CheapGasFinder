@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.cheapgasfinder.Callback;
 import com.example.cheapgasfinder.R;
 import com.example.cheapgasfinder.adapter.ImageAdapter;
 import com.example.cheapgasfinder.db.Position;
@@ -53,6 +54,11 @@ public class PositionDialog extends DialogFragment {
 
     private int mode = 0;
 
+    private DatabaseReference db;
+    private StorageReference storage;
+
+    private Callback<Object> callback;
+
     private void clearFields() {
         nameField.setText("");
         priceGasField.setText("");
@@ -60,11 +66,12 @@ public class PositionDialog extends DialogFragment {
         priceDieselField.setText("");
     }
 
-    private DatabaseReference db;
-    private StorageReference storage;
-
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+    public void setCallback(Callback<Object> callback) {
+        this.callback = callback;
     }
 
     public void setMode(int mode) {
@@ -96,6 +103,8 @@ public class PositionDialog extends DialogFragment {
 
         imageAdapter = new ImageAdapter(getContext(), R.layout.image_item, new ArrayList<Bitmap>());
 
+        imageAdapter.setMode( mode );
+
         imageList.setAdapter(imageAdapter);
 
         if( mode > 0 )
@@ -116,10 +125,12 @@ public class PositionDialog extends DialogFragment {
                     public void onComplete(@NonNull Task<byte[]> task) {
                         byte[] b = task.getResult();
                         Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-                        imageAdapter.insert( bitmap, c );
+                        imageAdapter.insert( bitmap, 0 );
                     }
                 });
             }
+
+            imageButton.setEnabled( false );
         }
 
         if( mode > 1 )
@@ -128,6 +139,7 @@ public class PositionDialog extends DialogFragment {
             priceGasField.setEnabled( false );
             priceEthanolField.setEnabled( false );
             priceDieselField.setEnabled( false );
+            addButton.setEnabled( false );
         }
 
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -169,11 +181,13 @@ public class PositionDialog extends DialogFragment {
 
                                 Bitmap bitmap = imageAdapter.getItem( i );
                                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 0, baos);
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                                 byte[] data = baos.toByteArray();
 
-                                ref.putBytes(data);
+                                ref.putBytes( data );
                             }
+
+                            callback.doAccept( "lmao" );
 
                             clearFields();
                             dismiss();

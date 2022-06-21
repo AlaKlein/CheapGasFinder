@@ -45,10 +45,6 @@ public class MapsActivity extends FragmentActivity {
 
     private Position p;
 
-    private PositionDialog s;
-
-    private FilterDialog f;
-
     private Map<String, String> filter;
 
     private Map<Marker,Position> markers;
@@ -60,6 +56,7 @@ public class MapsActivity extends FragmentActivity {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 googleMap.clear();
+                markers.clear();
 
                 Object result = task.getResult().getValue();
 
@@ -130,9 +127,6 @@ public class MapsActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        s = new PositionDialog();
-        f = new FilterDialog();
-
         mAuth = FirebaseAuth.getInstance();
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -148,15 +142,6 @@ public class MapsActivity extends FragmentActivity {
 
         filter = new HashMap<>();
         markers = new HashMap<>();
-
-        f.setCallback(new Callback<Map<String, String>>() {
-            @Override
-            public void doAccept(Map<String, String> o) {
-                filter = o;
-
-                refreshContent();
-            }
-        });
 
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -186,6 +171,8 @@ public class MapsActivity extends FragmentActivity {
                     public boolean onMarkerClick(@NonNull Marker marker) {
                         Position position = markers.get( marker );
 
+                        PositionDialog s = new PositionDialog();
+
                         s.setPosition(position);
                         s.setMode( position.isEditable() ? 1 : 2 );
                         s.show(getSupportFragmentManager(), "PossitonDialog");
@@ -200,7 +187,21 @@ public class MapsActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 if (p != null) {
+                    PositionDialog s = new PositionDialog();
+                    s.setMode(0);
                     s.setPosition(p);
+                    s.setCallback(new Callback<Object>() {
+                        @Override
+                        public void doAccept(Object o) {
+                            if( temp != null )
+                            {
+                                temp.remove();
+                                temp = null;
+                            }
+
+                            refreshContent();
+                        }
+                    });
                     s.show(getSupportFragmentManager(), "PossitonDialog");
                 } else {
                     Toast.makeText(MapsActivity.this, "Select a place on the map first!", Toast.LENGTH_SHORT).show();
@@ -222,6 +223,17 @@ public class MapsActivity extends FragmentActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FilterDialog f = new FilterDialog();
+
+                f.setCallback(new Callback<Map<String, String>>() {
+                    @Override
+                    public void doAccept(Map<String, String> o) {
+                        filter = o;
+
+                        refreshContent();
+                    }
+                });
+
                 f.show(getSupportFragmentManager(), "FilterDialog");
             }
         });
