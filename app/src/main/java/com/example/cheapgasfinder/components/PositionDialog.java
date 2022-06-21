@@ -46,6 +46,7 @@ public class PositionDialog extends DialogFragment {
     private Button imageButton;
     private Button addButton;
     private Button cancelButton;
+    private Button deleteButton;
 
     private TextView nameField;
     private TextView priceGasField;
@@ -95,6 +96,7 @@ public class PositionDialog extends DialogFragment {
         imageButton = view.findViewById(R.id.imageButton);
         addButton = view.findViewById(R.id.okButton);
         cancelButton = view.findViewById(R.id.cancelButton);
+        deleteButton = view.findViewById( R.id.deleteButton );
 
         nameField = view.findViewById(R.id.nameField);
         priceGasField = view.findViewById(R.id.priceGasField);
@@ -107,6 +109,11 @@ public class PositionDialog extends DialogFragment {
 
         imageList.setAdapter(imageAdapter);
 
+        if( mode == 0 )
+        {
+            deleteButton.setEnabled( false );
+        }
+
         if( mode > 0 )
         {
             String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -118,7 +125,7 @@ public class PositionDialog extends DialogFragment {
 
             for( int i = 0; i < position.getImages(); i++ ) {
                 final int c = i;
-                StorageReference ref = storage.child(user + "/" + position.getI()+"/" + i + ".jpg");
+                StorageReference ref = storage.child(position.getUser() + "/" + position.getI()+"/" + i + ".jpg");
 
                 ref.getBytes( 1024 * 1024 ).addOnCompleteListener(new OnCompleteListener<byte[]>() {
                     @Override
@@ -131,6 +138,7 @@ public class PositionDialog extends DialogFragment {
             }
 
             imageButton.setEnabled( false );
+            deleteButton.setEnabled( true );
         }
 
         if( mode > 1 )
@@ -140,6 +148,7 @@ public class PositionDialog extends DialogFragment {
             priceEthanolField.setEnabled( false );
             priceDieselField.setEnabled( false );
             addButton.setEnabled( false );
+            deleteButton.setEnabled( false );
         }
 
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -172,7 +181,13 @@ public class PositionDialog extends DialogFragment {
                             position.setTimestamp( System.currentTimeMillis() );
                             position.setImages( imageAdapter.getCount() );
 
-                            items.add(position);
+                            if( mode == 1 )
+                            {
+                                items.set( position.getI(), position );
+                            }
+                            else {
+                                items.add(position);
+                            }
 
                             db.child(user).setValue(items);
 
@@ -192,6 +207,38 @@ public class PositionDialog extends DialogFragment {
                             clearFields();
                             dismiss();
                         }
+                    }
+                });
+            }
+        });
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                db.child(user).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        Object result = task.getResult().getValue();
+                        List<Position> items = new ArrayList<>();
+
+                        if (result != null && result instanceof List) {
+                            items = (List<Position>) result;
+                        }
+
+                        items.remove(position.getI());
+
+                        db.child(user).setValue(items);
+
+                        for( int i = 0; i < imageAdapter.getCount(); i++ ) {
+                            storage.child(user + "/" + position.getI() + "/" + i + ".jpg").delete();
+                        }
+
+                        callback.doAccept( "lmao" );
+
+                        clearFields();
+                        dismiss();
                     }
                 });
             }

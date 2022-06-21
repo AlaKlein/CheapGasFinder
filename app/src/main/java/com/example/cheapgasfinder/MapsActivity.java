@@ -1,6 +1,9 @@
 package com.example.cheapgasfinder;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -12,6 +15,9 @@ import com.example.cheapgasfinder.components.FilterDialog;
 import com.example.cheapgasfinder.components.PositionDialog;
 import com.example.cheapgasfinder.databinding.ActivityMapsBinding;
 import com.example.cheapgasfinder.db.Position;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -77,7 +83,7 @@ public class MapsActivity extends FragmentActivity {
 
                             p.setI( i );
                             p.setEditable( editable );
-
+                            p.setUser( e.getKey() );
                             if (filter.containsKey("name") && !filter.get("name").isEmpty() && !p.getName().contains(filter.get("name"))) {
                                 continue;
                             }
@@ -143,12 +149,30 @@ public class MapsActivity extends FragmentActivity {
         filter = new HashMap<>();
         markers = new HashMap<>();
 
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull GoogleMap googleMap) {
                 MapsActivity.this.googleMap = googleMap;
 
                 refreshContent();
+
+                Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+
+                locationResult.addOnCompleteListener( MapsActivity.this, new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    if (task.isSuccessful()) {
+                        // Set the map's camera position to the current location of the device.
+                        Location lastKnownLocation = task.getResult();
+                        if (lastKnownLocation != null) {
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    new LatLng(lastKnownLocation.getLatitude(),
+                                            lastKnownLocation.getLongitude()), 15 ));
+                        }
+                    }
+                }});
 
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
@@ -162,7 +186,7 @@ public class MapsActivity extends FragmentActivity {
                             temp.remove();
                         }
 
-                        temp = googleMap.addMarker(new MarkerOptions().position(latLng));
+                        temp = googleMap.addMarker(new MarkerOptions().position(latLng).icon( BitmapDescriptorFactory.defaultMarker( BitmapDescriptorFactory.HUE_YELLOW )));
                     }
                 });
 
@@ -175,6 +199,18 @@ public class MapsActivity extends FragmentActivity {
 
                         s.setPosition(position);
                         s.setMode( position.isEditable() ? 1 : 2 );
+                        s.setCallback(new Callback<Object>() {
+                            @Override
+                            public void doAccept(Object o) {
+                                if( temp != null )
+                                {
+                                    temp.remove();
+                                    temp = null;
+                                }
+
+                                refreshContent();
+                            }
+                        });
                         s.show(getSupportFragmentManager(), "PossitonDialog");
 
                         return false;

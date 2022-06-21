@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class Position {
     private int i;
+    private String user;
     private double latitude;
     private double longitude;
     private long timestamp;
@@ -111,5 +112,13 @@ public class Position {
 
     public void setImages(int images) {
         this.images = images;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getUser() {
+        return user;
     }
 }
